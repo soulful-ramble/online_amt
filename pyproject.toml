@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "online-amt"
+version = "0.1.0"
+description = ""
+authors = ["soulful-ramble <wangbaogang.abc@gmail.com>"]
+readme = "README.md"
+packages = [{include = "online_amt"}]
+
+[tool.poetry.dependencies]
+python = "3.7.16"
+flask = ">=2.2.2"
+scipy = "1.4.1"
+numpy = "1.16.2"
+pyaudio = "0.2.11"
+librosa = "0.7.2"
+matplotlib = "3.1.1"
+torch = "1.6.0"
+rtmidi = "2.3.4"
+python-rtmidi = "1.1.2"
+numba = "0.48"
+asyncio = "^3.4.3"
+aiofile = "^3.8.8"
+soundfile = "^0.12.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

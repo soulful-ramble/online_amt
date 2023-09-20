@@ -7,7 +7,7 @@ CHUNK = 2048
 RATE = 44100
 
 
-### this code is from https://blog.naver.com/chandong83/221149828690
+# this code is from https://blog.naver.com/chandong83/221149828690
 class MicrophoneStream(object):
     def __init__(self, rate, chunk, channels):
         self._rate = rate
@@ -21,10 +21,10 @@ class MicrophoneStream(object):
         self._audio_interface = pyaudio.PyAudio()
         self._audio_stream = self._audio_interface.open(
             format=pyaudio.paInt16,
-            channels=self._channels, rate=self._rate,
-            input=True, frames_per_buffer=self._chunk,
+            channels=self._channels, rate=self._rate,  # 16000
+            input=True, frames_per_buffer=self._chunk,  # 512
             stream_callback=self._fill_buffer,
-        )        
+        )
         self.closed = False
         return self
 
@@ -35,8 +35,10 @@ class MicrophoneStream(object):
         self.closed = True
         self._buff.put(None)
         self._audio_interface.terminate()
-    
+
     def _fill_buffer(self, in_data, frame_count, time_info, status_flags):
+        # print('in_data(buffer) type', type(in_data))
+        # in_data(buffer) type <class 'bytes'>
         self._buff.put(in_data)
         return None, pyaudio.paContinue
 
@@ -58,18 +60,19 @@ class MicrophoneStream(object):
             yield b''.join(data)
 
 
-
 def main():
-    # 마이크 열기 
-    with MicrophoneStream(RATE, CHUNK, 1) as stream: 
+    # 마이크 열기
+    with MicrophoneStream(RATE, CHUNK, 1) as stream:
         audio_generator = stream.generator()
+        print('np.int16', np.int16)
         for i in range(1000):
             data = stream._buff.get()
             decoded = np.frombuffer(data, dtype=np.int16) / 32768
             print(stream._buff.qsize(), decoded[0:5])
             # for x in audio_generator:
             #     # 마이크 음성 데이터
-            #     print(x)            
+            #     print(x)
+
 
 if __name__ == '__main__':
     main()
